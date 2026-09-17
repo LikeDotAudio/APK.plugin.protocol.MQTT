@@ -1,11 +1,11 @@
 [package]
-workspace = "../.."
+workspace = "../../APK:plugins:Build/SRC"
 name = "apkaudio-mqtt"
 version = "0.1.0"
 edition.workspace = true
 
 [dependencies]
-apkaudio-contracts = { path = "../../contracts/rust" }
+apkaudio-contracts = { path = "../../APK:BareMetal/SRC/contracts/rust" }
 
 dashmap = { version = "5.5", optional = true }
 # NOT optional. The topic-filter grammar in `router` is plain Rust and
