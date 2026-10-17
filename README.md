@@ -9,7 +9,7 @@ The MQTT bus and broker configuration, as a Rust library.
 | **Used by** | the orchestrator and oaRustCore; a member of the plugin workspace |
 | **Workspace** | `APK:discovery/SRC/Cargo.toml` |
 
-Its `config.ini` (`[mqtt]`) is where the two broker keys and the order between them are written down. Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `POD:databus/DATABUS:Broker:MQTT`.
+Its `config.ini` (`[mqtt]`) is where the two broker keys and the order between them are written down. Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `POD.databus/DATABUS.Broker.MQTT`.
 
 ---
 
