@@ -1,6 +1,6 @@
 // Part of the APK.audio project — http://APK.audio — made by Anthony Kuzub
 // MIT Licence. Free, for everyone, for ever. Full text in LICENSE at the root.
-//! `apkaudio-mqtt` (crate name; its folder is `Protocol-mqtt`) — MQTT manager helpers.
+//! `apkaudio-mqtt` (crate name; its folder is `LIBRARY/LIB.MQTT/SRC`) — MQTT manager helpers.
 //!
 //! **This crate is a PyO3 extension shim around a pure grammar.** The topic
 //! filter grammar in `router` compiles in the default feature set, because
@@ -16,7 +16,7 @@
 //! ONE lint is allowed crate-wide and it is not this crate's code:
 //! `unsafe_op_in_unsafe_fn` fires eight times inside pyo3's `#[pymethods]`
 //! expansion in `router`. Named rather than blanketed, for the reason
-//! `Protocol-aes70/src/lib.rs` gives at length: a crate-wide `allow` list is
+//! `PLUGIN.AES70/SRC/src/lib.rs` gives at length: a crate-wide `allow` list is
 //! how an unused import and four elided lifetimes hid there for a year.
 #![cfg_attr(feature = "python", allow(unsafe_op_in_unsafe_fn))]
 

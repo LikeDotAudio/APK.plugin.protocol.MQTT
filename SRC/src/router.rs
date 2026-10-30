@@ -21,7 +21,7 @@
 //! is not addressed to this application reaches this router in the first place.
 //!
 //! Exposed to Python as `oaRustCore.mqtt_router` -- registered by string in
-//! `Core/src/lib.rs`, so `MqttRouter` and the `#[pymodule]` name below
+//! `Core/CORE:engine:RUST/lib.rs`, so `MqttRouter` and the `#[pymodule]` name below
 //! are a public API and may not be renamed to suit Rust taste.
 
 // The grammar below is plain Rust; only the delivery type around it needs
