@@ -14,7 +14,7 @@ Checked 2026-10-30: 11 passed; the `python` build finishes.
 
 | Destination | How |
 |---|---|
-| `node-baremetal:local` (container `Node-BareMetal`) | `NODE.BareMetal/Docker/Dockerfile` copies `LIBRARY/LIB.MQTT/SRC` into the build stage; `apkaudio-orchestrator` depends on oaRustCore, which depends on this crate with `features = ["python"]`. Its `config.ini` is staged to `/app/APK:DOCKERS/APK:BareMetal/LIB.MQTT/config.ini` and read at run time. |
+| `node-baremetal:local` (container `Node-BareMetal`) | `NODE.BareMetal/Docker/Dockerfile` copies `LIBRARY/LIB.MQTT/SRC` into the build stage; it is compiled as a member of the plugin workspace; oaRustCore no longer depends on it. Its `config.ini` is staged to `/app/APK:DOCKERS/APK:BareMetal/LIB.MQTT/config.ini` and read at run time. |
 | the plugin builder image (`DISCOVERY.Engine/Docker/Dockerfile`) | compiled as a workspace member without `python`; no plugin binary uses it |
 | GitHub | `https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git`, a submodule of the monorepo; pushed by `.apk.scripts/deploy_all.py` at the root |
 

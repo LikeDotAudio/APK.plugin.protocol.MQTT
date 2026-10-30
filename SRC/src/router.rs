@@ -20,9 +20,10 @@
 //! the BROKER's rule about which subscriptions it will serve, and nothing that
 //! is not addressed to this application reaches this router in the first place.
 //!
-//! Exposed to Python as `oaRustCore.mqtt_router` -- registered by string in
-//! `Core/CORE:engine:RUST/lib.rs`, so `MqttRouter` and the `#[pymodule]` name below
-//! are a public API and may not be renamed to suit Rust taste.
+//! Was exposed to Python as `oaRustCore.mqtt_router`; oaRustCore stopped
+//! mounting it (no Python imported it), so nothing builds the `python` feature
+//! today. Keep `MqttRouter` and the `#[pymodule]` name below stable anyway: a
+//! caller that re-mounts it gets the name the old imports used.
 
 // The grammar below is plain Rust; only the delivery type around it needs
 // an interpreter. PLAN-645.01.

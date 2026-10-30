@@ -14,5 +14,5 @@ The principles `apkaudio-mqtt` keeps, each pointed at the code that keeps it. Th
 
 ## Where the code falls short
 
-- **A reader that nobody calls.** oaRustCore mounts the router as `mqtt_router` / `oaMQTTManager_rs` (`NODE.BareMetal/SRC/Core/CORE:engine:RUST/lib.rs`, `add_submodule!(router, …)`), but no Python in the tree imports it. Golden rule 1 is kept for `config.ini` and not for the PyO3 surface.
+- **A reader that nobody calls.** The PyO3 surface is not mounted: oaRustCore dropped it, because no Python under `PODS/` imported it (`NODE.BareMetal/SRC/Core/CORE:engine:RUST/lib.rs`, the "NOT MOUNTED" comment), and no Cargo.toml in the tree enables the `python` feature. A Python caller re-adds the dependency with `features = ["python"]` and its `add_submodule!` in the same commit as the import.
 - **`enabled`** in `config.ini` is read by the protocol census (`NODE.BareMetal/SRC/Baremetal:Manager/protocol_census.py`) for display only; nothing switches on it.

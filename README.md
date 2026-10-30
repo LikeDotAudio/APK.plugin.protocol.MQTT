@@ -5,8 +5,8 @@ The MQTT bus and broker configuration, and the MQTT topic-filter grammar, as a R
 | | |
 |---|---|
 | **Recipe** | none — a library, not a container: it is linked into the binaries that use it |
-| **Source** | `SRC/` (this repository — https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git) — crate `apkaudio-mqtt` (feature `python` for oaRustCore) |
-| **Used by** | oaRustCore (`PODS/POD.THICK/NODE.BareMetal/SRC/Core/CORE:engine:RUST/lib.rs`), which mounts the router as the Python submodule `mqtt_router` (`oaMQTTManager_rs`); its `config.ini` is read by the orchestrator and, off the bus, by the shell; a member of the plugin workspace |
+| **Source** | `SRC/` (this repository — https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git) — crate `apkaudio-mqtt` (opt-in feature `python`; nothing enables it) |
+| **Used by** | no crate depends on it; oaRustCore no longer mounts `mqtt_router`. Its `config.ini` is read by the orchestrator and, off the bus, by the shell; a member of the plugin workspace |
 | **Workspace** | `PODS/POD.THICK/DISCOVERY.Engine/SRC/Cargo.toml` (shared `target/` at the repository root) |
 | **Family / Category** | LIBRARY — bus library; links no MQTT client, opens no socket, binds no port |
 
