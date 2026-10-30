@@ -4,7 +4,7 @@ Is `LIB.MQTT` deployed? Written by `.apk.scripts/smoke.py` from the module's own
 
 ← [Wiki home](../README.md)
 
-**✅ PASS** — 1/1 checks, since 2026-10-30 12:50 EDT
+**✅ PASS** — 1/1 checks, since 2026-10-30 12:51 EDT
 
 | Check | Target | Result | Detail |
 |---|---|---|---|
@@ -12,4 +12,4 @@ Is `LIB.MQTT` deployed? Written by `.apk.scripts/smoke.py` from the module's own
 
 Re-run: `python3 .apk.scripts/smoke.py PODS/POD.THICK/LIBRARY/LIB.MQTT`
 
-<!-- smoke:sig 6e2b097c3110 since 2026-10-30 12:50 EDT -->
+<!-- smoke:sig 3598e15374c3 since 2026-10-30 12:51 EDT -->
