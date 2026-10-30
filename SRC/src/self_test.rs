@@ -10,10 +10,12 @@
 //! WHY IT IS A PLAIN FUNCTION AND NOT A BUS LOOP
 //!
 //! Eleven of the twenty-nine crates in this workspace link no MQTT client, so
-//! whatever runs their self test is not them — for the in-process protocol
-//! crates it is the orchestrator. A function over the crate's own machinery is
-//! runnable by that supervisor, by `cargo test`, and by a person at a terminal,
-//! and none of the three needs a broker to be up. PLAN-459.01.
+//! whatever runs their self test is not them. For this library nothing on the
+//! bus does: since PLAN-3316.01 the orchestrator links none of the six libraries
+//! to answer for them (`NODE.BareMetal/SRC/Core/ORCHESTRATOR:hunter:VISA/src/main.rs`,
+//! "NO BUS SELF-TEST LISTENER HERE"), so `cargo test` — or a person at a
+//! terminal calling `self_test_json` — is the runner, and neither needs a
+//! broker to be up. PLAN-459.01.
 //!
 //! WHAT A CHECK HERE MAY DO
 //!
@@ -34,9 +36,8 @@ pub const MODULE: &str = "mqtt";
 /// This crate's `config.ini`, baked in at compile time.
 ///
 /// Read from the binary rather than from disk because a self test must not
-/// depend on the working directory it was launched from — the orchestrator
-/// starts these agents in-process from `/app`, and a check that passed at a
-/// terminal and failed under the supervisor would be worse than no check.
+/// depend on the working directory it was launched from — a check that passed
+/// at one working directory and failed at another would be worse than no check.
 const CONFIG_INI: &str = include_str!("../config.ini");
 
 /// Everything this crate can prove about itself at `depth`.
@@ -87,8 +88,9 @@ fn landing_spots() -> Result<(), String> {
 
 /// Does `config.ini` open with `[mqtt]`?
 ///
-/// The drift this catches is quiet and total: `orchestrator/src/mqtt.rs` walks
-/// this directory, parses each `config.ini` and publishes it retained under the
+/// The drift this catches is quiet and total: `publish_protocol_configs` in
+/// `NODE.BareMetal/SRC/Core/ORCHESTRATOR:hunter:VISA/src/mqtt.rs` walks the
+/// module folders, parses each `config.ini` and publishes it retained under the
 /// section's own name. A section renamed without its crate puts this agent's
 /// configuration on the bus under a name nothing reads, and every display goes
 /// on showing the last good copy.

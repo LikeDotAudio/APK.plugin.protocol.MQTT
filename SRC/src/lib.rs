@@ -23,7 +23,7 @@
 pub mod router;
 
 /// This crate's own self test — what it can prove about itself with nothing
-/// plugged in. Reached from the bus through `outgoing/selftest_run`; see
-/// `apkaudio_contracts::self_test` for the two inputs and the withdrawal the
-/// first of them performs. PLAN-459.01.
+/// plugged in. Run by `cargo test`; nothing answers `outgoing/selftest_run`
+/// for it on the bus since PLAN-3316.01 (see `self_test.rs`). The report shape
+/// is `apkaudio_contracts::self_test`'s. PLAN-459.01.
 pub mod self_test;
