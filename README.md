@@ -12,6 +12,9 @@ The MQTT bus and broker configuration, and the MQTT topic-filter grammar, as a R
 
 Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `PODS/POD.databus/DATABUS.Broker.MQTT`.
 
+
+**Wiki:** [Documentation/README.md](Documentation/README.md) — principles, architecture and delivery.
+
 ## What it does
 
 | File | What is in it |
