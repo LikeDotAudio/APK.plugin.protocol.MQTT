@@ -1,0 +1,22 @@
+{
+  "comment": "Contract for the retained payload at `topic`: the [mqtt] section of LIB.MQTT/SRC/config.ini as the orchestrator publishes it (publish_protocol_configs: every ini value a JSON string, under value.mqtt). Readers: the shell (POD.THIN/OS/DataBus/config/bus-config.js: host, ws_port, tcp_port, public_host, public_ws_port, public_wss_port) and BrokerConfig::from_payload. Bump `version` and apkaudio_mqtt::CONFIG_PAYLOAD_VERSION together when a key in `keys` is renamed, removed or changes meaning.",
+  "version": 1,
+  "topic": "APK.audio/System/Protocols/mqtt/config",
+  "keys": ["enabled", "host", "tcp_port", "ws_port", "public_host", "public_tcp_port", "public_ws_port", "public_wss_port", "topic"],
+  "example": {
+    "value": {
+      "mqtt": {
+        "enabled": "true",
+        "host": "127.0.0.1",
+        "ws_port": "9001",
+        "tcp_port": "1883",
+        "public_tcp_port": "1883",
+        "public_ws_port": "8080",
+        "public_wss_port": "8081",
+        "topic": "APK.audio/System/Protocols/mqtt"
+      }
+    },
+    "path": "PODS/POD.THICK/LIBRARY/LIB.MQTT/SRC/config.ini",
+    "source": "backend"
+  }
+}

@@ -4,23 +4,30 @@
 
 ```sh
 cd PODS/POD.THICK/DISCOVERY.Engine/SRC
-cargo test  -p apkaudio-mqtt                       # 11 tests (7 grammar, 4 self test)
-cargo build -p apkaudio-mqtt --features python     # the PyO3 half
+cargo test  -p apkaudio-mqtt                       # 18 tests + 1 doc test — the one check
 ```
 
-Checked 2026-10-30: 11 passed; the `python` build finishes.
+Checked 2026-10-30: 18 passed + 1 doc test.
 
 ## Where it lands
 
 | Destination | How |
 |---|---|
 | `node-baremetal:local` (container `Node-BareMetal`) | `NODE.BareMetal/Docker/Dockerfile` copies `LIBRARY/LIB.MQTT/SRC` into the build stage; it is compiled as a member of the plugin workspace; oaRustCore no longer depends on it. Its `config.ini` is staged to `/app/APK:DOCKERS/APK:BareMetal/LIB.MQTT/config.ini` and read at run time. |
-| the plugin builder image (`DISCOVERY.Engine/Docker/Dockerfile`) | compiled as a workspace member without `python`; no plugin binary uses it |
+| the plugin builder image (`DISCOVERY.Engine/Docker/Dockerfile`) | compiled as a workspace member; no plugin binary links it yet (PLUGIN.SQL adoption pending) |
 | GitHub | `https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git`, a submodule of the monorepo; pushed by `.apk.scripts/deploy_all.py` at the root |
 
 No live URL: a library has no page of its own. Its config is visible on the bus at `APK.audio/System/Protocols/mqtt/config`.
 
 ## Not automated
 
-- No CI runs `cargo test` for this crate; the monorepo's `.github/workflows/ci.yml` deploys the web site and verifies nothing, by design. The test is an operator's command.
+- No CI runs `cargo test` for this crate; the monorepo's `.github/workflows/ci.yml` deploys the web site and verifies nothing, by design. The test is the one command above.
 - A change here reaches a node only when an operator rebuilds `Node-BareMetal` (`docker compose -f PODS/POD.THICK/NODE.BareMetal/Docker/docker-compose.yml up -d --build`).
+
+## Delivered from the 2026-10-30 audit
+
+- **Public topic-filter grammar** — `SRC/src/router.rs` → `SRC/src/filter.rs`: `pub fn topic_matches(filter, topic) -> bool` (level-by-level, no regex, total), `validate_filter`, `TopicFilter::new` / `compile_filter` (validated; `FilterError` names the §4.7 rule), `is_valid_topic_name`, re-exported at the crate root in the default build. All seven original edge-case tests kept, plus validation tests and a doc test. PLUGIN.SQL deleting its copy: handoff filed (it needs LIB.MQTT by git, i.e. after the standalone conversion is pushed). Verified `cargo test -p apkaudio-mqtt` (engine workspace) 18 + 1 doc test pass.
+- **`[mqtt]` parse and validation owned here** — `SRC/src/broker_config.rs` `BrokerConfig::from_ini` / `bundled()` / `from_payload`, with the "a non-local `host` is refused" rule (`refused_host`) and `is_local_host` (same rule as the orchestrator's `broker_is_local`). Tests `a_public_host_under_host_is_refused`, `junk_falls_back_to_the_safe_defaults`, `local_hosts`, `the_bundled_config_is_local_and_has_no_public_broker`. The orchestrator switching to it: handoff to NODE.BareMetal filed.
+- **Versioned payload contract** — `CONFIG_PAYLOAD_VERSION = 1`, `PAYLOAD_KEYS`, `CONFIG_TOPIC` and `SRC/vectors/mqtt_config_payload.json` (version, topic, keys, example payload in the orchestrator's `{value:{mqtt:{…strings}}}` shape); `the_payload_contract_vector_holds` checks the vector, and that the bundled `config.ini` published that way reads back identically and still carries every key the shell reads (`host`, `ws_port`, `tcp_port`, `public_ws_port`, `public_wss_port`, `topic`).
+- **The `python` feature's fate decided: retired** — `MqttRouter` / `#[pymodule] oamqttmanager_rs`, and the `pyo3`, `dashmap`, `regex` dependencies, removed (nothing mounted it since oaRustCore dropped it). Reversible: last source at commit `26e1266` (`SRC/src/router.rs`), restore procedure in ARCHITECTURE.md. Engine `Cargo.lock` refresh: handoff to DISCOVERY.Engine.
+- **Tests run per change as one command** — no workflow here (the root CI verifies nothing on purpose); the check is `cargo test -p apkaudio-mqtt` in `DISCOVERY.Engine/SRC` (and `cargo test` in `SRC/` once the standalone conversion lands).

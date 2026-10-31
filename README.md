@@ -5,8 +5,8 @@ The MQTT bus and broker configuration, and the MQTT topic-filter grammar, as a R
 | | |
 |---|---|
 | **Recipe** | none — a library, not a container: it is linked into the binaries that use it |
-| **Source** | `SRC/` (this repository — https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git) — crate `apkaudio-mqtt` (opt-in feature `python`; nothing enables it) |
-| **Used by** | no crate depends on it; oaRustCore no longer mounts `mqtt_router`. Its `config.ini` is read by the orchestrator and, off the bus, by the shell; a member of the plugin workspace |
+| **Source** | `SRC/` (this repository — https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git) — crate `apkaudio-mqtt` (no features; the dormant `python` feature was retired 2026-10-30) |
+| **Used by** | adoption pending: PLUGIN.SQL (`topic_matches`) and the orchestrator (`BrokerConfig::from_ini`) — handoffs filed 2026-10-30. Its `config.ini` is read by the orchestrator and, off the bus, by the shell; a member of the plugin workspace |
 | **Workspace** | `PODS/POD.THICK/DISCOVERY.Engine/SRC/Cargo.toml` (shared `target/` at the repository root) |
 | **Family / Category** | LIBRARY — bus library; links no MQTT client, opens no socket, binds no port |
 
@@ -19,7 +19,8 @@ Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `PO
 
 | File | What is in it |
 |---|---|
-| `SRC/src/router.rs` | the MQTT 3.1.1 §4.7 filter grammar (`#` includes its parent level, `+` is one level and may be empty, everything else literal) compiled to an anchored regex; `MqttRouter` (feature `python`) — `subscribe(filter, callback)`, `unsubscribe(filter)`, `match_topic(topic)` → the callbacks that want it, `clear()`. No connection, no payload decoding |
+| `SRC/src/filter.rs` | the MQTT 3.1.1 §4.7 filter grammar (`#` includes its parent level, `+` is one level and may be empty, everything else literal) — public: `topic_matches(filter, topic)`, `TopicFilter::new` (validated), `validate_filter`, `compile_filter`, `is_valid_topic_name`. No connection, no payload decoding |
+| `SRC/src/broker_config.rs` | `BrokerConfig::from_ini` / `bundled()` / `from_payload` — the `[mqtt]` section typed, with the "public address under `host` is refused" rule (`refused_host`) and `is_local_host`; `CONFIG_PAYLOAD_VERSION` + `SRC/vectors/mqtt_config_payload.json` pin the retained payload's shape |
 | `SRC/src/self_test.rs` | the self test, module name `mqtt` |
 | `SRC/config.ini` | `[mqtt]` — the broker keys below, and `topic` |
 
@@ -29,7 +30,7 @@ Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `PO
 
 | Key | Read by | Meaning |
 |---|---|---|
-| `host`, `tcp_port` | orchestrator, `ORCHESTRATOR:hunter:VISA/src/broker/select.rs` (`endpoints_from_ini`) | the broker this bench owns; a public address here is refused out loud |
+| `host`, `tcp_port` | `BrokerConfig::from_ini` here; the orchestrator, `ORCHESTRATOR:hunter:VISA/src/broker/select.rs` (`endpoints_from_ini`), until it adopts it | the broker this bench owns; a public address here is refused out loud |
 | `public_host`, `public_tcp_port` | the same | the broker to publish to first — **withdrawn** (commented out) since 2026-08-29, so the orchestrator stays local unless `--public-host` is typed |
 | `ws_port`, `public_ws_port`, `public_wss_port` | the shell, `POD.THIN/OS/DataBus/config/bus-config.js`, from the retained payload | the websocket ports the browser connects to |
 | `topic` | orchestrator, `ORCHESTRATOR:hunter:VISA/src/mqtt.rs` | where this file is published |
@@ -41,19 +42,18 @@ The orchestrator publishes it retained at `APK.audio/System/Protocols/mqtt/confi
 
 ```sh
 cd PODS/POD.THICK/DISCOVERY.Engine/SRC
-cargo test -p apkaudio-mqtt                     # 11 tests: 7 on the filter grammar, 4 on the self test
-cargo build -p apkaudio-mqtt --features python  # the PyO3 half
+cargo test -p apkaudio-mqtt                     # 18 tests (9 grammar, 5 broker config + payload contract, 4 self test) + 1 doc test
 ```
 
-Checked 2026-10-30: `cargo test -p apkaudio-mqtt` — 11 passed.
+Checked 2026-10-30: `cargo test -p apkaudio-mqtt` — 18 passed + 1 doc test.
 
 ## Philosophy
 
-- **Owns the grammar and nothing else.** The router holds no connection and never decodes a payload; it answers which callbacks want a topic that has already arrived (`SRC/src/router.rs`, header).
-- **The spec, not the obvious regex.** `#` matching its parent and an empty `+` level are written as tests, and regex metacharacters in a filter are literals (`SRC/src/router.rs`, `mod tests`).
+- **Owns the grammar and the broker config, nothing else.** No connection, no payload decoding beyond its own config (`SRC/src/filter.rs`, `SRC/src/broker_config.rs`).
+- **The spec, not the obvious regex.** `#` matching its parent and an empty `+` level are written as tests, and regex metacharacters in a filter are literals (`SRC/src/filter.rs`, `mod tests`).
 - **A public broker is a decision with a name on it.** Nothing local may quietly become public: `public_host` is a separate key, withdrawn by default, and the orchestrator says which broker it chose on every boot (`SRC/config.ini`; enforced in the orchestrator's `broker/select.rs` and `broker/choice.rs`).
 - **Write the reader first.** No `topic_listen` / `topic_ignore` / `topic_publish` keys, because the subscribe topics come from Python as arguments, never from this file (`SRC/config.ini`, closing comment).
-- **Only what needs the interpreter is gated.** The grammar compiles in the default feature set; `MqttRouter` and the `#[pymodule]` sit behind `python` (`SRC/src/lib.rs`, `SRC/Cargo.toml`).
+- **One public copy of each rule.** Consumers call `topic_matches` / `BrokerConfig::from_ini` rather than re-implementing them (`SRC/src/lib.rs`).
 - **Bake in, don't look up.** The self test reads `config.ini` through `include_str!` and checks the section still names the module (`SRC/src/self_test.rs`).
 
 ---

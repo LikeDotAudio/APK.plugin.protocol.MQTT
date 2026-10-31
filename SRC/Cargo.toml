@@ -3,15 +3,10 @@ workspace = "../../../DISCOVERY.Engine/SRC"
 name = "apkaudio-mqtt"
 version = "0.1.0"
 edition.workspace = true
+description = "The MQTT topic-filter grammar and the [mqtt] broker config, typed — no client, no socket"
 
 [dependencies]
 apkaudio-contracts = { path = "../../../NODE.BareMetal/SRC/contracts/rust" }
-
-dashmap = { version = "5.5", optional = true }
-# NOT optional. The topic-filter grammar in `router` is plain Rust and
-# `self_test` reads it without an interpreter attached. PLAN-645.01.
-regex = "1.10"
-pyo3 = { version = "0.21.2", optional = true }
-
-[features]
-python = ["dep:pyo3", "dep:dashmap"]
+# For BrokerConfig::from_payload and the payload contract test; already in
+# every consumer's tree through apkaudio-contracts.
+serde_json = "1"

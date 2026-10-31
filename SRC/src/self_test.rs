@@ -66,7 +66,7 @@ pub fn self_test(depth: Depth) -> Report {
         "a_wildcard_filter_matches_one_level_and_not_two",
         Depth::Own,
         "`a/+/c` takes `a/b/c` and refuses `a/b/x/c`",
-        crate::router::self_test_filter(),
+        crate::filter::self_test_filter(),
     ));
 
     report

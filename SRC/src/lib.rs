@@ -1,26 +1,26 @@
 // Part of the APK.audio project — http://APK.audio — made by Anthony Kuzub
 // MIT Licence. Free, for everyone, for ever. Full text in LICENSE at the root.
-//! `apkaudio-mqtt` (crate name; its folder is `LIBRARY/LIB.MQTT/SRC`) — MQTT manager helpers.
+//! `apkaudio-mqtt` (crate name; its folder is `LIBRARY/LIB.MQTT/SRC`) — the
+//! bus's two shared rules, as plain Rust:
 //!
-//! **This crate is a PyO3 extension shim around a pure grammar.** The topic
-//! filter grammar in `router` compiles in the default feature set, because
-//! `self_test` asks it questions and `self_test` is never gated; only the
-//! `MqttRouter` delivery type and its `#[pymodule]` sit behind the `python`
-//! feature, which is NOT enabled by default. Build with `--features python` to
-//! get the Python-facing half. Until PLAN-645.01 the whole module was gated and
-//! this crate could not compile in its own default configuration at all.
+//! * [`filter`] — the MQTT 3.1.1 §4.7 topic-filter grammar: [`topic_matches`],
+//!   [`TopicFilter`], [`validate_filter`]. The one copy for every Rust crate
+//!   that matches topics locally (PLUGIN.SQL's `capture_ignore`, …).
+//! * [`broker_config`] — the `[mqtt]` section of this crate's `config.ini`,
+//!   typed and validated ([`BrokerConfig::from_ini`], the "public address
+//!   under `host` is refused" rule, [`is_local_host`]), and the versioned
+//!   contract of the retained `APK.audio/System/Protocols/mqtt/config` payload.
 //!
-//! (The `cargo new` template `add()` that used to sit here has been removed: a
-//! function asserting 2 + 2 as the crate's public entry point misrepresented the
-//! crate as unimplemented.)
-//! ONE lint is allowed crate-wide and it is not this crate's code:
-//! `unsafe_op_in_unsafe_fn` fires eight times inside pyo3's `#[pymethods]`
-//! expansion in `router`. Named rather than blanketed, for the reason
-//! `PLUGIN.AES70/SRC/src/lib.rs` gives at length: a crate-wide `allow` list is
-//! how an unused import and four elided lifetimes hid there for a year.
-#![cfg_attr(feature = "python", allow(unsafe_op_in_unsafe_fn))]
+//! No MQTT client, no socket, no runtime. The `python` feature (a PyO3
+//! `MqttRouter` that nothing had mounted since oaRustCore stopped) was retired
+//! on 2026-10-30; its last source is in this repository's history at commit
+//! `26e1266` (`SRC/src/router.rs`) should a Python host ever want it back.
 
-pub mod router;
+pub mod broker_config;
+pub mod filter;
+
+pub use broker_config::{is_local_host, BrokerConfig, CONFIG_PAYLOAD_VERSION, CONFIG_TOPIC};
+pub use filter::{compile_filter, is_valid_topic_name, topic_matches, validate_filter, FilterError, TopicFilter};
 
 /// This crate's own self test — what it can prove about itself with nothing
 /// plugged in. Run by `cargo test`; nothing answers `outgoing/selftest_run`
