@@ -11,7 +11,7 @@ The MQTT 3.1.1 §4.7 topic-filter grammar plus the bench's broker decision (`[mq
 |---|---|---|
 | APK.plugin.SDK `apkaudio-contracts` | Cargo git dependency, tag `sdk-v0.5` (`SRC/Cargo.toml`); patched to the local contracts inside the engine workspace | Conformist (self-test report shape), versioned |
 | DISCOVERY.Engine workspace | member through the link `DISCOVERY.Engine/SRC/members/LIB.MQTT` (standalone since 2026-10-30) | Shared build (workspace host) |
-| Orchestrator (`ORCHESTRATOR:hunter:VISA`, in NODE.BareMetal) | reads this repo's `SRC/config.ini` from disk, publishes it retained at `APK.audio/System/Protocols/mqtt/config` | Supplier of config file (file-level coupling) |
+| Orchestrator (`ORCHESTRATOR.hunter.VISA`, in NODE.BareMetal) | reads this repo's `SRC/config.ini` from disk, publishes it retained at `APK.audio/System/Protocols/mqtt/config` | Supplier of config file (file-level coupling) |
 | Shell (`POD.THIN/OS/DataBus/config/bus-config.js`, `ledger/bus-ledger.js`) | the retained `.../mqtt/config` payload | Published Language (bus) |
 | PLUGIN.SQL and ~46 crates that link `rumqttc` | none — they do not depend on this crate | Should be Shared Kernel; today unused |
 

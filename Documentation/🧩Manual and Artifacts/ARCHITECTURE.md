@@ -43,4 +43,4 @@ The `python` feature (`MqttRouter`, `#[pymodule] oamqttmanager_rs`) was retired 
 
 ## Self test
 
-Run by `cargo test`. Since PLAN-3316.01 nothing on the bus answers `outgoing/selftest_run` for the libraries (`NODE.BareMetal/SRC/Core/ORCHESTRATOR:hunter:VISA/src/main.rs`, "NO BUS SELF-TEST LISTENER HERE").
+Run by `cargo test`. Since PLAN-3316.01 nothing on the bus answers `outgoing/selftest_run` for the libraries (`NODE.BareMetal/SRC/Core/ORCHESTRATOR.hunter.VISA/src/main.rs`, "NO BUS SELF-TEST LISTENER HERE").

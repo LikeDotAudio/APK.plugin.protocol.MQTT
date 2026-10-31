@@ -30,10 +30,10 @@ Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `PO
 
 | Key | Read by | Meaning |
 |---|---|---|
-| `host`, `tcp_port` | `BrokerConfig::from_ini` here; the orchestrator, `ORCHESTRATOR:hunter:VISA/src/broker/select.rs` (`endpoints_from_ini`), until it adopts it | the broker this bench owns; a public address here is refused out loud |
+| `host`, `tcp_port` | `BrokerConfig::from_ini` here; the orchestrator, `ORCHESTRATOR.hunter.VISA/src/broker/select.rs` (`endpoints_from_ini`), until it adopts it | the broker this bench owns; a public address here is refused out loud |
 | `public_host`, `public_tcp_port` | the same | the broker to publish to first — **withdrawn** (commented out) since 2026-08-29, so the orchestrator stays local unless `--public-host` is typed |
 | `ws_port`, `public_ws_port`, `public_wss_port` | the shell, `POD.THIN/OS/DataBus/config/bus-config.js`, from the retained payload | the websocket ports the browser connects to |
-| `topic` | orchestrator, `ORCHESTRATOR:hunter:VISA/src/mqtt.rs` | where this file is published |
+| `topic` | orchestrator, `ORCHESTRATOR.hunter.VISA/src/mqtt.rs` | where this file is published |
 | `enabled` | nothing found | rides along in the payload |
 
 The orchestrator publishes it retained at `APK.audio/System/Protocols/mqtt/config` (with `/status` = `online` and, on a broker the bench owns, `/host`).
