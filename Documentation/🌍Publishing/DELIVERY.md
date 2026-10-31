@@ -24,6 +24,11 @@ No live URL: a library has no page of its own. Its config is visible on the bus 
 - No CI runs `cargo test` for this crate; the monorepo's `.github/workflows/ci.yml` deploys the web site and verifies nothing, by design. The test is the one command above.
 - A change here reaches a node only when an operator rebuilds `Node-BareMetal` (`docker compose -f PODS/POD.THICK/NODE.BareMetal/Docker/docker-compose.yml up -d --build`).
 
+## Delivered 2026-10-31: portable file names (no `:` `|` or case twins)
+
+- The monorepo now checks out on Windows and macOS: no tracked name holds `<>:"|?*`, a trailing dot or space, a device name or a case-only twin. Colon folders became dot folders (the POD.x convention).
+- References to the renamed folders updated (`Baremetal.Manager`, `ORCHESTRATOR.hunter.VISA`). Docs/comments only, no behaviour change.
+
 ## Delivered from the 2026-10-30 audit
 
 - **Public topic-filter grammar** — `SRC/src/router.rs` → `SRC/src/filter.rs`: `pub fn topic_matches(filter, topic) -> bool` (level-by-level, no regex, total), `validate_filter`, `TopicFilter::new` / `compile_filter` (validated; `FilterError` names the §4.7 rule), `is_valid_topic_name`, re-exported at the crate root in the default build. All seven original edge-case tests kept, plus validation tests and a doc test. PLUGIN.SQL deleting its copy: handoff filed (it needs LIB.MQTT by git, i.e. after the standalone conversion is pushed). Verified `cargo test -p apkaudio-mqtt` (engine workspace) 18 + 1 doc test pass.
