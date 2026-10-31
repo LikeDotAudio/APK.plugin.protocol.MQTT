@@ -1,12 +1,15 @@
 [package]
-workspace = "../../../DISCOVERY.Engine/SRC"
 name = "apkaudio-mqtt"
 version = "0.1.0"
-edition.workspace = true
+edition = "2024"
 description = "The MQTT topic-filter grammar and the [mqtt] broker config, typed — no client, no socket"
 
 [dependencies]
-apkaudio-contracts = { path = "../../../NODE.BareMetal/SRC/contracts/rust" }
+# From APK.plugin.SDK by tag, so a clone of this repository builds alone
+# (.apk.scripts/plugin_standalone.py). In the monorepo the DISCOVERY.Engine
+# workspace's [patch] — and, run from this folder, the generated, untracked
+# .cargo/config.toml — point it back at the local contracts.
+apkaudio-contracts = { git = "https://github.com/LikeDotAudio/APK.plugin.SDK", tag = "sdk-v0.5" }
 # For BrokerConfig::from_payload and the payload contract test; already in
 # every consumer's tree through apkaudio-contracts.
 serde_json = "1"

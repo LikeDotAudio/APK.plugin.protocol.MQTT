@@ -18,7 +18,7 @@ The MQTT 3.1.1 §4.7 topic-filter grammar plus the bench's broker decision (`[mq
 ## Scorecard
 | Category | Score (0–3) | Finding |
 |---|---|---|
-| Coupling & Cohesion | 2 | The config's parse and validation now live here (`BrokerConfig`); still builds only inside the engine workspace with contracts by relative path (standalone patch waiting on the engine) |
+| Coupling & Cohesion | 3 | Builds from its own repository (SDK by tag); the config's parse and validation live here (`BrokerConfig`) |
 | Boundary Integrity | 3 | Grammar and broker config are public, typed Rust (`topic_matches`, `TopicFilter`, `BrokerConfig::from_ini`); no socket, no PyO3 |
 | Duplication Control | 2 | `topic_matches` and `is_local_host` are public; PLUGIN.SQL and the orchestrator still carry their copies until they adopt (handoffs filed) |
 | Testing & Contracts | 3 | 18 tests + 1 doc test incl. a versioned payload-contract vector; one command (`cargo test -p apkaudio-mqtt`) |
@@ -26,7 +26,6 @@ The MQTT 3.1.1 §4.7 topic-filter grammar plus the bench's broker decision (`[mq
 Score key: 3 meets the standard · 2 minor gaps · 1 significant gaps · 0 absent / violated.
 
 ## Findings
-1. **Cross-repo path coupling in the manifest (open — waiting on DISCOVERY.Engine).** [`SRC/Cargo.toml`](../../SRC/Cargo.toml) line 2 makes the crate a member of `../../../DISCOVERY.Engine/SRC` and line 8 pulls `apkaudio-contracts` from `../../../NODE.BareMetal/SRC/contracts/rust`. The standalone manifest is ready and verified but must land with the engine's `members/LIB.MQTT` link.
 2. **Good: the security decision is written down and defaulted safe.** `public_host` is commented out (`config.ini:65`) with the PLAN-35.04 incident evidence beside it; `host = 127.0.0.1` (`config.ini:35`); `BrokerConfig::from_ini` refuses a non-local `host` (`SRC/src/broker_config.rs`).
 3. **Good: the grammar is correct and pinned.** `SRC/src/filter.rs` tests cover parent-inclusive `#`, empty `+` levels and regex metacharacters as literals.
 4. **Self test bakes config in.** [`SRC/src/self_test.rs`](../../SRC/src/self_test.rs) uses `include_str!("../config.ini")` and asserts the section name matches `MODULE = "mqtt"`.

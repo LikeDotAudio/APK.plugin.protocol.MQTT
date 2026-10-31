@@ -1,0 +1,2 @@
+# A standalone `cargo` run writes this; in the monorepo the engine workspace lock is the one that counts (PLAN-3397.01).
+/SRC/Cargo.lock
