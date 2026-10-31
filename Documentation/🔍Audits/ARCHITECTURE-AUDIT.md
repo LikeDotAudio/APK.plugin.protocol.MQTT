@@ -22,7 +22,7 @@ The MQTT 3.1.1 §4.7 topic-filter grammar plus the bench's broker decision (`[mq
 | Boundary Integrity | 3 | Grammar and broker config are public, typed Rust (`topic_matches`, `TopicFilter`, `BrokerConfig::from_ini`); no socket, no PyO3 |
 | Duplication Control | 2 | `topic_matches` and `is_local_host` are public; PLUGIN.SQL and the orchestrator still carry their copies until they adopt (handoffs filed) |
 | Testing & Contracts | 3 | 18 tests + 1 doc test incl. a versioned payload-contract vector; one command (`cargo test -p apkaudio-mqtt`) |
-| Change management | 2 | The retained payload is versioned (`CONFIG_PAYLOAD_VERSION`, vector file); the crate itself is still 0.1.0, untagged |
+| Change management | 3 | The retained payload is versioned (`CONFIG_PAYLOAD_VERSION`, vector file); the crate is released and tagged `mqtt-v0.2.0` |
 Score key: 3 meets the standard · 2 minor gaps · 1 significant gaps · 0 absent / violated.
 
 ## Findings
