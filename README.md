@@ -7,7 +7,7 @@ The MQTT bus and broker configuration, and the MQTT topic-filter grammar, as a R
 | **Recipe** | none — a library, not a container: it is linked into the binaries that use it |
 | **Source** | `SRC/` (this repository — https://github.com/LikeDotAudio/APK.plugin.protocol.MQTT.git) — crate `apkaudio-mqtt` (no features; the dormant `python` feature was retired 2026-10-30) |
 | **Used by** | adoption pending: PLUGIN.SQL (`topic_matches`) and the orchestrator (`BrokerConfig::from_ini`) — handoffs filed 2026-10-30. Its `config.ini` is read by the orchestrator and, off the bus, by the shell; a member of the plugin workspace |
-| **Workspace** | none of its own — builds standalone (`cargo test` in `SRC/`, SDK by tag `sdk-v0.5`); the DISCOVERY.Engine workspace reaches it through the link `SRC/members/LIB.MQTT` |
+| **Workspace** | none of its own — builds standalone (`cargo test` in `SRC/`, SDK by tag `sdk-v0.7`); the DISCOVERY.Engine workspace reaches it through the link `SRC/members/LIB.MQTT` |
 | **Family / Category** | LIBRARY — bus library; links no MQTT client, opens no socket, binds no port |
 
 Was `APK:BareMetal/PLUGINS/PLUGIN:protocol:MQTT`. The brokers themselves are `PODS/POD.databus/DATABUS.Broker.MQTT`.
