@@ -1,6 +1,6 @@
 [package]
 name = "apkaudio-mqtt"
-version = "0.3.0"
+version = "2.0.0"
 edition = "2024"
 description = "The MQTT topic-filter grammar and the [mqtt] broker config, typed — no client, no socket"
 
